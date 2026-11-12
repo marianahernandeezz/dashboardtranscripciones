@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="es-419">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FILL IN THE GAPS: Transcripciones fonéticas</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Noto Sans (para excelente soporte de símbolos AFI / IPA) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet" />
+  <!-- jsPDF para generación de reporte PDF en cliente -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans', 'sans-serif'],
+            ipa: ['Noto Sans', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            pastel: {
+              lavender: '#F3E8FF',
+              mint: '#DCFCE7',
+              peach: '#FFEDD5',
+              sky: '#E0F2FE',
+              rose: '#FFE4E6',
+              lemon: '#FEF9C3',
+            },
+            vibrant: {
+              purple: '#7C3AED',
+              purpleDark: '#5B21B6',
+              coral: '#F43F5E',
+              teal: '#0D9488',
+              indigo: '#4F46E5',
+              amber: '#D97706',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Fondo suave con patrón lingüístico sutil */
+    body {
+      background: linear-gradient(135deg, #F3E8FF 0%, #DCFCE7 48%, #FFEDD5 100%);
+      min-height: 100vh;
+    }
+
+    /* Animaciones suaves */
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-6px) rotate(3deg); }
+    }
+    .float-badge {
+      animation: floatSlow 4s ease-in-out infinite;
+    }
+
+    /* Estilos de fichas arrastrables y zonas de soltado */
+    .ipa-chip {
+      font-family: 'Noto Sans', 'Inter', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .ipa-chip:active {
+      transform: scale(0.96);
+    }
+    .ipa-chip.dragging {
+      opacity: 0.5;
+      transform: scale(0.95);
+    }
+
+    .drop-zone {
+      transition: all 0.2s ease;
+    }
+    .drop-zone.drag-over {
+      background-color: #EDE9FE;
+      border-color: #7C3AED;
+      transform: scale(1.02);
+      box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.2);
+    }
+
+    /* Barra de ondas sonoras decorativa */
+    .soundwave-bar {
+      animation: pulseWave 1.6s ease-in-out infinite;
+    }
+    @keyframes pulseWave {
+      0%, 100% { transform: scaleY(0.45); }
+      50% { transform: scaleY(1); }
+    }
+  </style>
+</head>
+<body class="text-slate-800 antialiased selection:bg-vibrant-purple selection:text-white">
+
+  <!-- Contenedor principal centrado -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+
+    <!-- ===================================================================== -->
+    <!-- 1. PANTALLA DE BIENVENIDA Y REGISTRO DEL ESTUDIANTE                   -->
+    <!-- ===================================================================== -->
+    <section id="welcome-screen" class="max-w-2xl mx-auto">
+      <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-xl border-2 border-vibrant-purple/20 overflow-hidden">
+        
+        <!-- Banner superior colorido con decoración fonética -->
+        <div class="bg-gradient-to-r from-vibrant-indigo via-vibrant-purple to-vibrant-coral p-6 sm:p-8 text-white relative overflow-hidden">
+          <!-- Símbolos fonéticos decorativos flotantes -->
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+            <div class="flex items-center gap-2">
+              <span class="float-badge inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-sm font-ipa font-bold text-lg border border-white/30">/ʃ/</span>
+              <span class="float-badge inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-sm font-ipa font-bold text-lg border border-white/30" style="animation-delay: 0.4s;">/ɲ/</span>
+              <span class="float-badge inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-sm font-ipa font-bold text-lg border border-white/30" style="animation-delay: 0.8s;">/ʝ/</span>
+              <span class="float-badge inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-sm font-ipa font-bold text-lg border border-white/30" style="animation-delay: 1.2s;">/ɾ/</span>
+            </div>
+
+            <!-- Ondas sonoras SVG -->
+            <div class="flex items-center gap-1 h-8 px-3 py-1 rounded-full bg-white/15 border border-white/25" aria-hidden="true">
+              <span class="soundwave-bar w-1 h-5 bg-pastel-lemon rounded-full" style="animation-delay: 0.1s;"></span>
+              <span class="soundwave-bar w-1 h-6 bg-pastel-mint rounded-full" style="animation-delay: 0.3s;"></span>
+              <span class="soundwave-bar w-1 h-4 bg-pastel-peach rounded-full" style="animation-delay: 0.5s;"></span>
+              <span class="soundwave-bar w-1 h-6 bg-white rounded-full" style="animation-delay: 0.2s;"></span>
+              <span class="soundwave-bar w-1 h-5 bg-pastel-sky rounded-full" style="animation-delay: 0.4s;"></span>
+            </div>
+          </div>
+
+          <span class="inline-block px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-pastel-lemon text-vibrant-purpleDark mb-2">
+            PANTALLA DE BIENVENIDA Y REGISTRO DEL ESTUDIANTE
+          </span>
+          <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
+            ¡BIENVENIDO A LA ACTIVIDAD!
+          </h1>
+        </div>
+
+        <!-- Cuerpo de bienvenida y formulario -->
+        <div class="p-6 sm:p-8 space-y-6">
+          <div class="bg-pastel-sky/70 border-l-4 border-vibrant-indigo p-4 sm:p-5 rounded-2xl">
+            <p class="text-slate-700 text-base sm:text-lg leading-relaxed font-medium">
+              En esta actividad pondrás a prueba tus conocimientos y practicarás la transcripción fonémica que hemos visto durante el curso. Lee cuidadosamente las instrucciones y completa los 12 espacios en blanco.
+            </p>
+          </div>
+
+          <!-- Tarjetas resumen de reglas rápidas -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+            <div class="bg-pastel-lavender p-3.5 rounded-2xl border border-vibrant-purple/20">
+              <div class="text-vibrant-purple font-extrabold text-xl">12</div>
+              <div class="text-xs font-semibold text-slate-700 uppercase tracking-wide">Espacios en blanco</div>
+            </div>
+            <div class="bg-pastel-mint p-3.5 rounded-2xl border border-vibrant-teal/20">
+              <div class="text-vibrant-teal font-extrabold text-xl">1 pt</div>
+              <div class="text-xs font-semibold text-slate-700 uppercase tracking-wide">Por cada acierto</div>
+            </div>
+            <div class="bg-pastel-peach p-3.5 rounded-2xl border border-vibrant-amber/20">
+              <div class="text-vibrant-amber font-extrabold text-xl">12 pts</div>
+              <div class="text-xs font-semibold text-slate-700 uppercase tracking-wide">Puntuación máxima</div>
+            </div>
+          </div>
+
+          <!-- Formulario de registro obligatorio -->
+          <form id="student-form" class="space-y-4" novalidate>
+            <div>
+              <label for="student-name-input" class="block text-sm font-extrabold text-vibrant-purpleDark uppercase tracking-wide mb-2">
+                NOMBRE COMPLETO DEL ESTUDIANTE: <span class="text-vibrant-coral">*</span>
+              </label>
+              <input
+                type="text"
+                id="student-name-input"
+                name="studentName"
+                placeholder="Escribe tu nombre y apellidos completos..."
+                autocomplete="name"
+                required
+                class="w-full px-4 py-3.5 rounded-2xl border-2 border-vibrant-purple/30 bg-pastel-lavender/30 text-slate-900 font-semibold placeholder:text-slate-400 focus:outline-none focus:border-vibrant-purple focus:bg-white focus:ring-4 focus:ring-vibrant-purple/15 transition"
+              />
+              <!-- Mensaje de error inline (sin usar alert) -->
+              <div id="name-error-box" class="hidden mt-2.5 p-3 rounded-xl bg-pastel-rose border border-vibrant-coral text-vibrant-coral text-sm font-semibold flex items-center gap-2">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span>Por favor, escribe tu nombre completo antes de comenzar la actividad.</span>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-vibrant-purple to-vibrant-indigo hover:from-vibrant-purpleDark hover:to-vibrant-purple text-white font-extrabold text-base sm:text-lg tracking-wide shadow-lg shadow-vibrant-purple/30 hover:shadow-xl transform hover:-translate-y-0.5 transition cursor-pointer flex items-center justify-center gap-2"
+            >
+              <span>COMENZAR ACTIVIDAD</span>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- 2. PANTALLA PRINCIPAL DE LA ACTIVIDAD (FILL IN THE GAPS)              -->
+    <!-- ===================================================================== -->
+    <section id="activity-screen" class="hidden space-y-6">
+      
+      <!-- Barra superior con datos del estudiante y progreso -->
+      <header class="bg-white/95 backdrop-blur-md rounded-3xl shadow-md border-2 border-vibrant-indigo/20 p-4 sm:p-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div class="space-y-1">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pastel-lavender text-vibrant-purpleDark text-xs font-bold">
+              <span>ESTUDIANTE:</span>
+              <span id="header-student-name" class="uppercase"></span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              FILL IN THE GAPS: Transcripciones fonéticas
+            </h1>
+          </div>
+
+          <!-- Contador de espacios completados -->
+          <div class="flex items-center gap-3 bg-pastel-mint/80 border border-vibrant-teal/30 px-4 py-2.5 rounded-2xl self-start md:self-center">
+            <div class="text-right">
+              <div class="text-xs font-bold text-vibrant-teal uppercase">Completados</div>
+              <div class="text-xl font-extrabold text-slate-900">
+                <span id="completed-count">0</span> / 12
+              </div>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-vibrant-teal text-white flex items-center justify-center font-bold">
+              /AFI/
+            </div>
+          </div>
+        </div>
+
+        <!-- Instrucciones exactas + guía de interacción -->
+        <div class="mt-4 p-4 rounded-2xl bg-pastel-peach/80 border-l-4 border-vibrant-coral space-y-1.5">
+          <p class="font-bold text-slate-900 text-sm sm:text-base">
+            INSTRUCCIONES: Lee el texto y completa cada espacio con la palabra correcta del banco de palabras.
+          </p>
+          <p class="text-xs sm:text-sm text-slate-700">
+            Arrastra una de las 3 opciones disponibles de cada palabra hacia su espacio en blanco, o tócala para seleccionarla y luego toca el espacio en blanco. Cada palabra tiene <strong>1 sola respuesta correcta</strong> (1 punto cada una).
+          </p>
+        </div>
+      </header>
+
+      <!-- BANCO DE PALABRAS (con las 12 transcripciones correctas exactas en minúsculas) -->
+      <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-md border-2 border-vibrant-purple/25 p-5 sm:p-6">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <h2 class="text-base sm:text-lg font-extrabold text-vibrant-purpleDark flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-vibrant-purple"></span>
+            BANCO DE PALABRAS (12 transcripciones exactas)
+          </h2>
+          <span class="text-xs font-semibold px-3 py-1 rounded-full bg-pastel-sky text-vibrant-indigo">
+            Referencia en minúsculas
+          </span>
+        </div>
+        <div id="word-bank-container" class="flex flex-wrap gap-2 sm:gap-2.5">
+          <!-- Se llena dinámicamente con las 12 respuestas exactas barajadas -->
+        </div>
+      </div>
+
+      <!-- LISTA DE 12 EJERCICIOS (Grafema + Espacio en blanco + 3 Opciones arrastrables) -->
+      <div id="exercises-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+        <!-- Se renderizan dinámicamente las 12 tarjetas -->
+      </div>
+
+      <!-- Barra de acciones inferiores -->
+      <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-lg border-2 border-vibrant-purple/20 p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div id="validation-warning" class="text-sm font-semibold text-slate-600">
+          Asegúrate de revisar tus 12 espacios antes de calificar.
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto justify-end">
+          <button
+            type="button"
+            id="clear-all-btn"
+            class="px-4 py-3 rounded-2xl bg-pastel-rose hover:bg-vibrant-coral hover:text-white text-vibrant-coral font-bold text-sm transition cursor-pointer"
+          >
+            Limpiar espacios
+          </button>
+
+          <button
+            type="button"
+            id="submit-activity-btn"
+            class="flex-1 sm:flex-initial px-6 py-3.5 rounded-2xl bg-gradient-to-r from-vibrant-teal to-vibrant-indigo hover:opacity-95 text-white font-extrabold text-sm sm:text-base shadow-lg shadow-vibrant-indigo/25 transition transform hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2"
+          >
+            <span>FINALIZAR Y CALIFICAR ACTIVIDAD</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- 3. PANTALLA DE RETROALIMENTACIÓN FINAL Y REPORTE PDF                   -->
+    <!-- ===================================================================== -->
+    <!-- 3. PANTALLA DE RESULTADOS Y RETROALIMENTACIÓN FINAL                   -->
+    <!-- ===================================================================== -->
+    <section id="results-screen" class="hidden max-w-4xl mx-auto space-y-6">
+      
+      <!-- Tarjeta principal de resultados -->
+      <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-xl border-2 border-vibrant-purple/25 overflow-hidden">
+        <div class="bg-gradient-to-r from-vibrant-purple via-vibrant-indigo to-vibrant-teal p-6 sm:p-8 text-white">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+              <span class="inline-block px-3 py-1 rounded-full bg-white/20 text-xs font-bold uppercase tracking-wider mb-2">
+                Resultados de la Evaluación
+              </span>
+              <h2 class="text-2xl sm:text-3xl font-extrabold">
+                Reporte de Desempeño
+              </h2>
+            </div>
+            <div class="bg-white/15 backdrop-blur-sm border border-white/25 rounded-2xl px-4 py-2.5">
+              <div class="text-xs uppercase font-bold text-pastel-lemon">Estudiante</div>
+              <div id="result-student-name" class="font-extrabold text-base sm:text-lg"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-6 sm:p-8 space-y-6">
+          <!-- Indicadores de Puntuación y Respuestas Correctas -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="bg-pastel-lavender border-2 border-vibrant-purple/30 rounded-2xl p-5 text-center">
+              <div class="text-xs font-extrabold text-vibrant-purpleDark uppercase tracking-wider mb-1">
+                1. PUNTUACIÓN OBTENIDA
+              </div>
+              <div class="text-4xl sm:text-5xl font-extrabold text-vibrant-purple">
+                <span id="score-points">0</span> <span class="text-xl font-bold text-slate-600">/ 12 pts</span>
+              </div>
+            </div>
+
+            <div class="bg-pastel-mint border-2 border-vibrant-teal/30 rounded-2xl p-5 text-center">
+              <div class="text-xs font-extrabold text-vibrant-teal uppercase tracking-wider mb-1">
+                2. NÚMERO DE RESPUESTAS CORRECTAS
+              </div>
+              <div class="text-4xl sm:text-5xl font-extrabold text-vibrant-teal">
+                <span id="correct-count">0</span> <span class="text-xl font-bold text-slate-600">de 12</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. MENSAJE DE RETROALIMENTACIÓN CORRESPONDIENTE -->
+          <div class="space-y-3">
+            <h3 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
+              3. MENSAJE DE RETROALIMENTACIÓN
+            </h3>
+
+            <!-- Banner especial para 12/12 o 0/12 (oculto por defecto) -->
+            <div id="special-feedback-box" class="hidden p-5 rounded-2xl border-2 font-extrabold text-base sm:text-lg leading-relaxed shadow-sm"></div>
+
+            <!-- Mensaje principal por rango de puntuación -->
+            <div id="range-feedback-box" class="p-5 sm:p-6 rounded-2xl bg-pastel-sky/80 border-2 border-vibrant-indigo/30 text-slate-900 font-bold text-base sm:text-lg leading-relaxed"></div>
+          </div>
+
+          <!-- 4. BOTONES DE ACCIÓN: DESCARGAR PDF Y VOLVER A INTENTAR -->
+          <div class="pt-2 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-center gap-4">
+            <button
+              type="button"
+              id="download-pdf-btn"
+              class="px-6 py-4 rounded-2xl bg-gradient-to-r from-vibrant-coral to-vibrant-amber hover:opacity-95 text-white font-extrabold text-base shadow-lg shadow-vibrant-coral/25 transition transform hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span>DESCARGAR REPORTE EN PDF</span>
+            </button>
+
+            <button
+              type="button"
+              id="retry-activity-btn"
+              class="px-6 py-4 rounded-2xl bg-vibrant-purple hover:bg-vibrant-purpleDark text-white font-extrabold text-base shadow-lg shadow-vibrant-purple/25 transition transform hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              <span>VOLVER A INTENTAR LA ACTIVIDAD</span>
+            </button>
+
+            <button
+              type="button"
+              id="change-student-btn"
+              class="px-5 py-4 rounded-2xl bg-pastel-lavender hover:bg-vibrant-indigo hover:text-white text-vibrant-indigo font-bold text-sm border border-vibrant-indigo/30 transition cursor-pointer flex items-center justify-center gap-2"
+            >
+              <span>Cambiar estudiante / Inicio</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Revisión detallada de los 12 ítems -->
+      <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-md border-2 border-slate-200 p-6 sm:p-8">
+        <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 mb-4 flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-vibrant-teal"></span>
+          Desglose de tus respuestas (Clave de corrección)
+        </h3>
+        <div id="detailed-review-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <!-- Se genera dinámicamente -->
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- LÓGICA DE LA APLICACIÓN (JAVASCRIPT)                                  -->
+  <!-- ===================================================================== -->
+  <script>
+    /**
+     * Banco de datos exacto de los 12 ejercicios.
+     * Las respuestas correctas coinciden carácter por carácter con las indicaciones:
+     * 1. /kon.'se.xo/ - consejo
+     * 2. /'ka.sa/ - casa
+     * 3. /xaɾ.'din/ - jardín
+     * 4. /'xe.nįo/ - genio
+     * 5. /'ʝe.ma/ - yema
+     * 6. /'ʝo/ - yo
+     * 7. /a'po. ʝo/ - apoyo
+     * 8. /'ʝa.mo/ - llamo
+     * 9. /mu.’tʃa.tʃo/ - muchacho
+     * 10. /mu.'ɲe.ko/ - muñeco
+     * 11. /'pe.ɾa/ - pera
+     * 12. /'pe.ro/ - perro
+     */
+    const ITEMS_DATA = [
+      {
+        id: 1,
+        grapheme: "consejo",
+        correct: "/kon.'se.xo/",
+        distractors: ["/kon.'θe.xo/", "/kon.'se.go/"]
+      },
+      {
+        id: 2,
+        grapheme: "casa",
+        correct: "/'ka.sa/",
+        distractors: ["/'ka.θa/", "/ka.'sa/"]
+      },
+      {
+        id: 3,
+        grapheme: "jardín",
+        correct: "/xaɾ.'din/",
+        distractors: ["/xar.'din/", "/gaɾ.'din/"]
+      },
+      {
+        id: 4,
+        grapheme: "genio",
+        correct: "/'xe.nįo/",
+        distractors: ["/'ge.nįo/", "/'xe.ɲo/"]
+      },
+      {
+        id: 5,
+        grapheme: "yema",
+        correct: "/'ʝe.ma/",
+        distractors: ["/'je.ma/", "/'ʎe.ma/"]
+      },
+      {
+        id: 6,
+        grapheme: "yo",
+        correct: "/'ʝo/",
+        distractors: ["/'jo/", "/'ʎo/"]
+      },
+      {
+        id: 7,
+        grapheme: "apoyo",
+        correct: "/a'po. ʝo/",
+        distractors: ["/a'po. jo/", "/a.'po.ʎo/"]
+      },
+      {
+        id: 8,
+        grapheme: "llamo",
+        correct: "/'ʝa.mo/",
+        distractors: ["/'ʎa.mo/", "/'ja.mo/"]
+      },
+      {
+        id: 9,
+        grapheme: "muchacho",
+        correct: "/mu.’tʃa.tʃo/",
+        distractors: ["/mu.’ʃa.ʃo/", "/mu.'tsa.tso/"]
+      },
+      {
+        id: 10,
+        grapheme: "muñeco",
+        correct: "/mu.'ɲe.ko/",
+        distractors: ["/mu.'nie.ko/", "/mu.'ne.ko/"]
+      },
+      {
+        id: 11,
+        grapheme: "pera",
+        correct: "/'pe.ɾa/",
+        distractors: ["/'pe.ra/", "/pe.'ɾa/"]
+      },
+      {
+        id: 12,
+        grapheme: "perro",
+        correct: "/'pe.ro/",
+        distractors: ["/'pe.ɾo/", "/pe.'ro/"]
+      }
+    ];
+
+    // Estado global de la aplicación
+    const state = {
+      studentName: "",
+      userAnswers: {},        // Mapa { itemId: string | null }
+      shuffledOptions: {},    // Mapa { itemId: string[] }
+      selectedChip: null,     // { itemId: number, value: string } para soporte táctil / clic
+      lastEvaluation: null    // Guarda los resultados para el PDF
+    };
+
+    // Paleta de colores pastel para alternar tarjetas
+    const CARD_ACCENTS = [
+      { bg: "bg-pastel-lavender/60", border: "border-vibrant-purple/25", badge: "bg-vibrant-purple text-white" },
+      { bg: "bg-pastel-mint/60", border: "border-vibrant-teal/25", badge: "bg-vibrant-teal text-white" },
+      { bg: "bg-pastel-sky/60", border: "border-vibrant-indigo/25", badge: "bg-vibrant-indigo text-white" },
+      { bg: "bg-pastel-peach/60", border: "border-vibrant-amber/25", badge: "bg-vibrant-amber text-white" }
+    ];
+
+    // Referencias DOM
+    const welcomeScreen = document.getElementById("welcome-screen");
+    const activityScreen = document.getElementById("activity-screen");
+    const resultsScreen = document.getElementById("results-screen");
+
+    const studentForm = document.getElementById("student-form");
+    const studentNameInput = document.getElementById("student-name-input");
+    const nameErrorBox = document.getElementById("name-error-box");
+
+    const headerStudentName = document.getElementById("header-student-name");
+    const completedCountEl = document.getElementById("completed-count");
+    const wordBankContainer = document.getElementById("word-bank-container");
+    const exercisesGrid = document.getElementById("exercises-grid");
+    const validationWarning = document.getElementById("validation-warning");
+
+    // Utilidad para mezclar arreglos (Fisher-Yates)
+    function shuffleArray(array) {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    // Inicializar / Reiniciar estado de preguntas
+    function initializeActivityState() {
+      state.userAnswers = {};
+      state.shuffledOptions = {};
+      state.selectedChip = null;
+
+      ITEMS_DATA.forEach((item) => {
+        state.userAnswers[item.id] = null;
+        state.shuffledOptions[item.id] = shuffleArray([item.correct, ...item.distractors]);
+      });
+
+      renderWordBank();
+      renderExercises();
+      updateCompletedCounter();
+    }
+
+    // Renderizar el Banco de Palabras con las 12 transcripciones correctas exactas
+    function renderWordBank() {
+      const bankWords = shuffleArray(ITEMS_DATA.map((item) => item.correct));
+      const placedValues = new Set(Object.values(state.userAnswers).filter(Boolean));
+
+      wordBankContainer.innerHTML = "";
+      bankWords.forEach((transcription) => {
+        const isUsed = placedValues.has(transcription);
+        const pill = document.createElement("span");
+        pill.className = `font-ipa text-sm sm:text-base font-bold px-3.5 py-1.5 rounded-xl border transition ${
+          isUsed
+            ? "bg-slate-100 border-slate-200 text-slate-400 line-through"
+            : "bg-pastel-lavender border-vibrant-purple/30 text-vibrant-purpleDark shadow-xs"
+        }`;
+        pill.textContent = transcription;
+        wordBankContainer.appendChild(pill);
+      });
+    }
+
+    // Actualizar contador de espacios llenos
+    function updateCompletedCounter() {
+      const filled = Object.values(state.userAnswers).filter(Boolean).length;
+      completedCountEl.textContent = filled;
+    }
+
+    // Renderizar las 12 tarjetas de ejercicios
+    function renderExercises() {
+      exercisesGrid.innerHTML = "";
+
+      ITEMS_DATA.forEach((item, index) => {
+        const accent = CARD_ACCENTS[index % CARD_ACCENTS.length];
+        const currentAnswer = state.userAnswers[item.id];
+        const options = state.shuffledOptions[item.id];
+
+        const card = document.createElement("article");
+        card.className = `rounded-3xl border-2 ${accent.border} ${accent.bg} backdrop-blur-xs p-5 shadow-sm flex flex-col justify-between gap-4 transition`;
+
+        // Cabecera de la tarjeta: número + palabra en grafema
+        const headerRow = document.createElement("div");
+        headerRow.className = "flex items-center justify-between gap-3";
+        headerRow.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl ${accent.badge} font-extrabold text-sm flex items-center justify-center shrink-0 shadow-xs">
+              ${item.id}
+            </span>
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">Palabra en grafema</span>
+              <span class="text-xl sm:text-2xl font-extrabold text-slate-900 lowercase">${item.grapheme}</span>
+            </div>
+          </div>
+          <span class="text-xs font-bold text-slate-500 bg-white/80 px-2.5 py-1 rounded-lg border border-slate-200">
+            1 pt
+          </span>
+        `;
+
+        // Zona de soltado (Espacio en blanco)
+        const dropZone = document.createElement("div");
+        dropZone.dataset.itemId = item.id;
+        dropZone.className = `drop-zone min-h-[54px] rounded-2xl border-2 border-dashed px-4 py-2.5 flex items-center justify-between gap-2 cursor-pointer ${
+          currentAnswer
+            ? "bg-white border-vibrant-purple shadow-xs"
+            : "bg-white/70 border-slate-400 hover:border-vibrant-purple"
+        }`;
+
+        if (currentAnswer) {
+          dropZone.innerHTML = `
+            <span class="font-ipa text-lg font-extrabold text-vibrant-purpleDark">${currentAnswer}</span>
+            <button type="button" class="remove-answer-btn text-xs font-bold px-2.5 py-1 rounded-lg bg-pastel-rose text-vibrant-coral hover:bg-vibrant-coral hover:text-white transition cursor-pointer" title="Quitar respuesta">
+              Quitar ✕
+            </button>
+          `;
+          dropZone.querySelector(".remove-answer-btn").addEventListener("click", (e) => {
+            e.stopPropagation();
+            state.userAnswers[item.id] = null;
+            state.selectedChip = null;
+            renderExercises();
+            renderWordBank();
+            updateCompletedCounter();
+          });
+        } else {
+          dropZone.innerHTML = `
+            <span class="text-sm font-semibold text-slate-400 italic">
+              Arrastra o coloca aquí la transcripción...
+            </span>
+            <span class="text-xs font-bold text-vibrant-purple/70">[ espacio ]</span>
+          `;
+        }
+
+        // Eventos Drag & Drop en el espacio en blanco
+        dropZone.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          dropZone.classList.add("drag-over");
+        });
+
+        dropZone.addEventListener("dragleave", () => {
+          dropZone.classList.remove("drag-over");
+        });
+
+        dropZone.addEventListener("drop", (e) => {
+          e.preventDefault();
+          dropZone.classList.remove("drag-over");
+          try {
+            const payload = JSON.parse(e.dataTransfer.getData("text/plain"));
+            if (payload && Number(payload.itemId) === item.id) {
+              state.userAnswers[item.id] = payload.value;
+              state.selectedChip = null;
+              renderExercises();
+              renderWordBank();
+              updateCompletedCounter();
+            } else {
+              showTemporaryWarning(`Esa opción pertenece al ejercicio #${payload.itemId}. Arrastra una de las 3 opciones de "${item.grapheme}".`);
+            }
+          } catch (err) {
+            // Ignorar datos no válidos
+          }
+        });
+
+        // Soporte de clic / toque en el espacio en blanco si hay una ficha seleccionada
+        dropZone.addEventListener("click", () => {
+          if (state.selectedChip && state.selectedChip.itemId === item.id) {
+            state.userAnswers[item.id] = state.selectedChip.value;
+            state.selectedChip = null;
+            renderExercises();
+            renderWordBank();
+            updateCompletedCounter();
+          }
+        });
+
+        // Contenedor de las 3 opciones arrastrables para esta palabra
+        const optionsWrapper = document.createElement("div");
+        optionsWrapper.className = "space-y-1.5";
+        optionsWrapper.innerHTML = `<div class="text-[11px] font-bold uppercase tracking-wider text-slate-600">Elige 1 de las 3 opciones:</div>`;
+
+        const optionsRow = document.createElement("div");
+        optionsRow.className = "grid grid-cols-1 sm:grid-cols-3 gap-2";
+
+        options.forEach((opt) => {
+          const isPlaced = currentAnswer === opt;
+          const isSelected = state.selectedChip && state.selectedChip.itemId === item.id && state.selectedChip.value === opt;
+
+          const chip = document.createElement("button");
+          chip.type = "button";
+          chip.draggable = true;
+          chip.textContent = opt;
+          chip.className = `ipa-chip py-2.5 px-3 rounded-xl font-bold text-sm sm:text-base border-2 text-center cursor-grab active:cursor-grabbing ${
+            isPlaced
+              ? "bg-vibrant-purple text-white border-vibrant-purple shadow-sm"
+              : isSelected
+              ? "bg-pastel-lemon border-vibrant-amber text-slate-900 ring-2 ring-vibrant-amber"
+              : "bg-white hover:bg-pastel-lavender/70 text-slate-800 border-slate-300 hover:border-vibrant-purple"
+          }`;
+
+          // Inicio de arrastre (Desktop)
+          chip.addEventListener("dragstart", (e) => {
+            chip.classList.add("dragging");
+            e.dataTransfer.setData(
+              "text/plain",
+              JSON.stringify({ itemId: item.id, value: opt })
+            );
+          });
+
+          chip.addEventListener("dragend", () => {
+            chip.classList.remove("dragging");
+          });
+
+          // Clic / Toque directo: selecciona y coloca inmediatamente en su espacio
+          chip.addEventListener("click", () => {
+            state.userAnswers[item.id] = opt;
+            state.selectedChip = null;
+            renderExercises();
+            renderWordBank();
+            updateCompletedCounter();
+          });
+
+          optionsRow.appendChild(chip);
+        });
+
+        optionsWrapper.appendChild(optionsRow);
+
+        card.appendChild(headerRow);
+        card.appendChild(dropZone);
+        card.appendChild(optionsWrapper);
+        exercisesGrid.appendChild(card);
+      });
+    }
+
+    function showTemporaryWarning(msg) {
+      validationWarning.textContent = msg;
+      validationWarning.className = "text-sm font-bold text-vibrant-coral";
+      setTimeout(() => {
+        validationWarning.textContent = "Asegúrate de revisar tus 12 espacios antes de calificar.";
+        validationWarning.className = "text-sm font-semibold text-slate-600";
+      }, 4000);
+    }
+
+    // =========================================================================
+    // VALIDACIÓN DE INICIO DE SESIÓN DEL ESTUDIANTE
+    // =========================================================================
+    studentForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const rawName = studentNameInput.value.trim();
+
+      if (!rawName) {
+        nameErrorBox.classList.remove("hidden");
+        studentNameInput.focus();
+        return;
+      }
+
+      nameErrorBox.classList.add("hidden");
+      state.studentName = rawName;
+      headerStudentName.textContent = state.studentName;
+
+      // Cambiar de pantalla
+      welcomeScreen.classList.add("hidden");
+      activityScreen.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      initializeActivityState();
+    });
+
+    studentNameInput.addEventListener("input", () => {
+      if (studentNameInput.value.trim().length > 0) {
+        nameErrorBox.classList.add("hidden");
+      }
+    });
+
+    // Botón para limpiar respuestas
+    document.getElementById("clear-all-btn").addEventListener("click", () => {
+      ITEMS_DATA.forEach((item) => {
+        state.userAnswers[item.id] = null;
+      });
+      state.selectedChip = null;
+      renderExercises();
+      renderWordBank();
+      updateCompletedCounter();
+    });
+
+    // =========================================================================
+    // CALIFICACIÓN Y RETROALIMENTACIÓN FINAL
+    // =========================================================================
+    document.getElementById("submit-activity-btn").addEventListener("click", () => {
+      const unanswered = ITEMS_DATA.filter((item) => !state.userAnswers[item.id]);
+
+      if (unanswered.length > 0) {
+        showTemporaryWarning(
+          `Aún te faltan ${unanswered.length} espacio(s) por completar (por ejemplo, el #${unanswered[0].id}: "${unanswered[0].grapheme}"). Complétalos todos antes de finalizar.`
+        );
+        return;
+      }
+
+      evaluateAndShowResults();
+    });
+
+    function getFeedbackMessages(score) {
+      let specialMessage = "";
+      let mainMessage = "";
+
+      // Mensajes especiales para 12/12 y 0/12
+      if (score === 12) {
+        specialMessage = "¡12 DE 12! ¡RECONOCES MUY BIEN LOS SÍMBOLOS ADECUADOS PARA CADA TRANSCRIPCIÓN!";
+      } else if (score === 0) {
+        specialMessage = "NO TE PREOCUPES. EQUIVOCARSE TAMBIÉN ES PARTE DEL APRENDIZAJE. REVISA EL MATERIAL Y VUELVE A INTENTAR LA ACTIVIDAD.";
+      }
+
+      // Mensajes por rango de puntuación (10-12, 8-9, 4-7, 0-3)
+      if (score >= 10 && score <= 12) {
+        mainMessage =
+          "¡EXCELENTE TRABAJO! HAS DEMOSTRADO QUE COMPRENDES CÓMO TRANSCRIBIR CORRECTAMENTE CUALQUIER PALABRA.";
+      } else if (score >= 8 && score <= 9) {
+        mainMessage =
+          "¡MUY BIEN! HAS COMPRENDIDO LA MAYOR PARTE DEL TEMA. REPASA UN POCO MÁS Y VUELVE A OBSERVAR LAS SIMBOLOGÍAS PARA SEGUIR PRACTICANDO.";
+      } else if (score >= 4 && score <= 7) {
+        mainMessage =
+          "¡VAS POR BUEN CAMINO! RECONOCES ALGUNOS DE LOS ELEMENTOS IMPORTANTES, PERO TODAVIA PUEDES REFORZAR TUS CONOCIMIENTOS SOBRE LAS TRANSCRIPCIONES.";
+      } else {
+        // 0 a 3 respuestas correctas
+        mainMessage =
+          "SIGUE INTENTÁNDOLO ESTA ACTIVIDAD TE PERMITE IDENTIFICAR QUÉ NECESITAS REPASAR. VUELVE A REVISAR LA INFORMACIÓN DEL CURSO Y OBSERVA NUEVAMENTE LAS SIMBOLOGIAS CORRECTAS ANTES DE INTENTARLO DE NUEVO.";
+      }
+
+      return { specialMessage, mainMessage };
+    }
+
+    function evaluateAndShowResults() {
+      let correctCount = 0;
+      const details = ITEMS_DATA.map((item) => {
+        const chosen = state.userAnswers[item.id];
+        const isCorrect = chosen === item.correct;
+        if (isCorrect) correctCount++;
+        return {
+          id: item.id,
+          grapheme: item.grapheme,
+          chosen,
+          correct: item.correct,
+          isCorrect
+        };
+      });
+
+      const { specialMessage, mainMessage } = getFeedbackMessages(correctCount);
+
+      state.lastEvaluation = {
+        studentName: state.studentName,
+        score: correctCount,
+        total: ITEMS_DATA.length,
+        specialMessage,
+        mainMessage,
+        details,
+        dateStr: new Date().toLocaleDateString("es-MX", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit"
+        })
+      };
+
+      // Poblar DOM de resultados
+      document.getElementById("result-student-name").textContent = state.studentName;
+      document.getElementById("score-points").textContent = correctCount;
+      document.getElementById("correct-count").textContent = correctCount;
+
+      const specialBox = document.getElementById("special-feedback-box");
+      if (specialMessage) {
+        specialBox.textContent = specialMessage;
+        specialBox.classList.remove("hidden");
+        if (correctCount === 12) {
+          specialBox.className =
+            "p-5 rounded-2xl border-2 border-vibrant-teal bg-pastel-mint text-vibrant-teal font-extrabold text-base sm:text-lg leading-relaxed shadow-sm";
+        } else {
+          specialBox.className =
+            "p-5 rounded-2xl border-2 border-vibrant-amber bg-pastel-peach text-vibrant-amber font-extrabold text-base sm:text-lg leading-relaxed shadow-sm";
+        }
+      } else {
+        specialBox.classList.add("hidden");
+      }
+
+      document.getElementById("range-feedback-box").textContent = mainMessage;
+
+      // Renderizar revisión detallada
+      const reviewList = document.getElementById("detailed-review-list");
+      reviewList.innerHTML = "";
+      details.forEach((d) => {
+        const row = document.createElement("div");
+        row.className = `p-4 rounded-2xl border-2 flex items-start justify-between gap-3 ${
+          d.isCorrect
+            ? "bg-pastel-mint/60 border-vibrant-teal/40"
+            : "bg-pastel-rose/60 border-vibrant-coral/40"
+        }`;
+
+        row.innerHTML = `
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-extrabold px-2 py-0.5 rounded-md bg-white text-slate-700">#${d.id}</span>
+              <span class="font-extrabold text-slate-900 lowercase">${d.grapheme}</span>
+            </div>
+            <div class="text-xs sm:text-sm text-slate-700">
+              Tu respuesta: <span class="font-ipa font-bold ${d.isCorrect ? "text-vibrant-teal" : "text-vibrant-coral"}">${d.chosen}</span>
+            </div>
+            ${
+              !d.isCorrect
+                ? `<div class="text-xs sm:text-sm text-slate-800">Respuesta correcta: <span class="font-ipa font-extrabold text-vibrant-purpleDark">${d.correct}</span></div>`
+                : ""
+            }
+          </div>
+          <span class="px-2.5 py-1 rounded-xl text-xs font-extrabold shrink-0 ${
+            d.isCorrect ? "bg-vibrant-teal text-white" : "bg-vibrant-coral text-white"
+          }">
+            ${d.isCorrect ? "+1 pt ✓" : "0 pts ✕"}
+          </span>
+        `;
+        reviewList.appendChild(row);
+      });
+
+      // Cambiar de vista
+      activityScreen.classList.add("hidden");
+      resultsScreen.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    // =========================================================================
+    // BOTÓN VOLVER A INTENTAR LA ACTIVIDAD
+    // =========================================================================
+    document.getElementById("retry-activity-btn").addEventListener("click", () => {
+      resultsScreen.classList.add("hidden");
+      activityScreen.classList.remove("hidden");
+      initializeActivityState();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    // Botón opcional para volver a la pantalla de bienvenida
+    document.getElementById("change-student-btn").addEventListener("click", () => {
+      resultsScreen.classList.add("hidden");
+      welcomeScreen.classList.remove("hidden");
+      studentNameInput.value = state.studentName;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    // =========================================================================
+    // GENERACIÓN DE REPORTE PDF AUTOMÁTICO CON EL NOMBRE GUARDADO
+    // =========================================================================
+    document.getElementById("download-pdf-btn").addEventListener("click", () => {
+      if (!state.lastEvaluation) return;
+      const evalData = state.lastEvaluation;
+
+      try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+
+        // Encabezado colorido
+        doc.setFillColor(124, 58, 237); // Morado vibrante
+        doc.rect(0, 0, 210, 34, "F");
+
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(16);
+        doc.text("REPORTE DE EVALUACIÓN DIDÁCTICA", 14, 15);
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "normal");
+        doc.text("FILL IN THE GAPS: Transcripciones fonéticas", 14, 24);
+
+        // Datos del estudiante (usando automáticamente el nombre guardado)
+        doc.setTextColor(30, 41, 59);
+        doc.setFillColor(243, 232, 255);
+        doc.roundedRect(14, 40, 182, 24, 3, 3, "F");
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+        doc.text("ESTUDIANTE:", 18, 48);
+        doc.setFont("helvetica", "normal");
+        doc.text(evalData.studentName.toUpperCase(), 46, 48);
+
+        doc.setFont("helvetica", "bold");
+        doc.text("FECHA:", 18, 56);
+        doc.setFont("helvetica", "normal");
+        doc.text(evalData.dateStr, 35, 56);
+
+        doc.setFont("helvetica", "bold");
+        doc.text("PUNTUACIÓN:", 130, 48);
+        doc.setTextColor(13, 148, 136);
+        doc.text(`${evalData.score} / ${evalData.total} puntos (${evalData.score} correctas)`, 130, 56);
+
+        // Retroalimentación
+        let cursorY = 72;
+        doc.setTextColor(30, 41, 59);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.text("RETROALIMENTACIÓN:", 14, cursorY);
+        cursorY += 6;
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9.5);
+
+        if (evalData.specialMessage) {
+          const specialLines = doc.splitTextToSize(evalData.specialMessage, 180);
+          doc.setTextColor(124, 58, 237);
+          doc.setFont("helvetica", "bold");
+          doc.text(specialLines, 14, cursorY);
+          cursorY += specialLines.length * 5 + 3;
+        }
+
+        doc.setTextColor(51, 65, 85);
+        doc.setFont("helvetica", "normal");
+        const mainLines = doc.splitTextToSize(evalData.mainMessage, 180);
+        doc.text(mainLines, 14, cursorY);
+        cursorY += mainLines.length * 5 + 8;
+
+        // Tabla de respuestas
+        doc.setTextColor(30, 41, 59);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.text("DESGLOSE DE LAS 12 RESPUESTAS:", 14, cursorY);
+        cursorY += 6;
+
+        // Cabecera de tabla
+        doc.setFillColor(79, 70, 229);
+        doc.rect(14, cursorY, 182, 8, "F");
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(9);
+        doc.text("#", 17, cursorY + 5.5);
+        doc.text("Grafema", 26, cursorY + 5.5);
+        doc.text("Respuesta del estudiante", 65, cursorY + 5.5);
+        doc.text("Transcripción correcta", 122, cursorY + 5.5);
+        doc.text("Estado", 174, cursorY + 5.5);
+        cursorY += 8;
+
+        // Filas
+        evalData.details.forEach((item, idx) => {
+          if (idx % 2 === 0) {
+            doc.setFillColor(248, 250, 252);
+            doc.rect(14, cursorY, 182, 8, "F");
+          }
+
+          doc.setTextColor(30, 41, 59);
+          doc.setFont("helvetica", "normal");
+          doc.text(String(item.id), 17, cursorY + 5.5);
+          doc.text(item.grapheme, 26, cursorY + 5.5);
+          doc.text(item.chosen || "-", 65, cursorY + 5.5);
+          doc.text(item.correct, 122, cursorY + 5.5);
+
+          if (item.isCorrect) {
+            doc.setTextColor(13, 148, 136);
+            doc.setFont("helvetica", "bold");
+            doc.text("Correcta (1 pt)", 168, cursorY + 5.5);
+          } else {
+            doc.setTextColor(244, 63, 94);
+            doc.setFont("helvetica", "bold");
+            doc.text("Incorrecta (0 pt)", 166, cursorY + 5.5);
+          }
+
+          cursorY += 8;
+        });
+
+        // Nombre de archivo limpio basado en el estudiante
+        const safeFileName = evalData.studentName
+          .toLowerCase()
+          .replace(/[^a-z0-9áéíóúñ]+/gi, "_")
+          .replace(/^_|_$/g, "");
+
+        doc.save(`Reporte_Transcripciones_${safeFileName || "estudiante"}.pdf`);
+      } catch (error) {
+        // Fallback de impresión limpia si no cargó jsPDF
+        window.print();
+      }
+    });
+  </script>
+</body>
+</html>
